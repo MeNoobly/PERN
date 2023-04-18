@@ -1,2 +1,2 @@
-npm i express pg pg-hstore sequelize cors dotenv
+npm i express express-fileupload pg pg-hstore sequelize cors dotenv uuid
 npm i nodemon --save-dev
