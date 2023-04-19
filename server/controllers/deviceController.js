@@ -7,12 +7,9 @@ import ApiError from "../error/ApiError.js";
 class deviceController {
     async create(request, response, next) {
         try {
-            const { name, price, brandId, typeId, info } = request.body;
+            let { name, price, brandId, typeId, info } = request.body;
             const { img } = request.files;
             const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-            let fileName = v4() + ".jpg";
-            img.mv(path.resolve(__dirname, "..", "static", fileName));
 
             const device = await models.Device.create({
                 name,
@@ -21,6 +18,20 @@ class deviceController {
                 typeId,
                 img: fileName,
             });
+
+            if (info) {
+                info = JSON.parse(info);
+                info.forEach((item) => {
+                    models.DeviceInfo.create({
+                        title: item.title,
+                        description: item.description,
+                        deviceId: device.id,
+                    });
+                });
+            }
+
+            let fileName = v4() + ".jpg";
+            img.mv(path.resolve(__dirname, "..", "static", fileName));
 
             return response.json(device);
         } catch (error) {
@@ -66,7 +77,15 @@ class deviceController {
         return response.json(devices);
     }
 
-    async getOne(request, response) {}
+    async getOne(request, response) {
+        const { id } = request.params;
+        const device = await models.Device.findOne({
+            where: { id },
+            include: [{ model: models.DeviceInfo, as: "info" }],
+        });
+
+        return response.json(device);
+    }
 }
 
 export default new deviceController();
