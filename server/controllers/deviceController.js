@@ -40,41 +40,48 @@ class deviceController {
     }
 
     async getAll(request, response) {
-        let { brandId, typeId, limit, page } = request.query;
-        page = page || 1;
-        limit = limit || 9;
-        let offset = page * limit - limit;
-        let devices;
+        try {
+            let { brandId, typeId, limit, page } = request.query;
+            page = page || 1;
+            limit = limit || 9;
+            let offset = page * limit - limit;
+            let devices;
 
-        if (!brandId && !typeId) {
-            devices = await models.Device.findAndCountAll({ limit, offset });
+            if (!brandId && !typeId) {
+                devices = await models.Device.findAndCountAll({
+                    limit,
+                    offset,
+                });
+            }
+
+            if (brandId && !typeId) {
+                devices = await models.Device.findAndCountAll({
+                    where: { brandId },
+                    limit,
+                    offset,
+                });
+            }
+
+            if (!brandId && typeId) {
+                devices = await models.Device.findAndCountAll({
+                    where: { typeId },
+                    limit,
+                    offset,
+                });
+            }
+
+            if (brandId && typeId) {
+                devices = await models.Device.findAndCountAll({
+                    where: { brandId, typeId },
+                    limit,
+                    offset,
+                });
+            }
+
+            return response.json(devices);
+        } catch (error) {
+            next(ApiError.badRequest(error.message));
         }
-
-        if (brandId && !typeId) {
-            devices = await models.Device.findAndCountAll({
-                where: { brandId },
-                limit,
-                offset,
-            });
-        }
-
-        if (!brandId && typeId) {
-            devices = await models.Device.findAndCountAll({
-                where: { typeId },
-                limit,
-                offset,
-            });
-        }
-
-        if (brandId && typeId) {
-            devices = await models.Device.findAndCountAll({
-                where: { brandId, typeId },
-                limit,
-                offset,
-            });
-        }
-
-        return response.json(devices);
     }
 
     async getOne(request, response) {
