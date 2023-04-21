@@ -1,1 +1,1 @@
-npm i axios react-router-dom mobx mobx-react-lite bootstrap react-bootstrap
+npm i axios react-router-dom mobx mobx-react-lite bootstrap react-bootstrap jwt-decode

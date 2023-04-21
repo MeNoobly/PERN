@@ -10,12 +10,25 @@ const NavBar = observer(() => {
     const { user } = useContext(Context);
     const navigate = useNavigate();
 
+    const logout = () => {
+        user.setUser({});
+        user.setIsAuth(false);
+        navigate(LOGIN_ROUTE);
+    };
+
     return (
         <Navbar bg="dark" variant="dark">
             <Container>
-                <NavLink style={{ color: "white" }} to={SHOP_ROUTE}>
-                    КупиДевайс
-                </NavLink>
+                {user.isAuth ? (
+                    <NavLink style={{ color: "white" }} to={SHOP_ROUTE}>
+                        КупиДевайс
+                    </NavLink>
+                ) : (
+                    <NavLink style={{ color: "white" }} to={LOGIN_ROUTE}>
+                        КупиДевайс
+                    </NavLink>
+                )}
+
                 {user.isAuth ? (
                     <Nav className="ml-auto" style={{ color: "white" }}>
                         <Button
@@ -27,7 +40,9 @@ const NavBar = observer(() => {
                         <Button
                             variant={"outline-light"}
                             style={{ marginLeft: "10px" }}
-                            onClick={() => navigate(LOGIN_ROUTE)}
+                            onClick={() => {
+                                logout();
+                            }}
                         >
                             Выйти
                         </Button>
@@ -36,7 +51,7 @@ const NavBar = observer(() => {
                     <Nav className="ml-auto" style={{ color: "white" }}>
                         <Button
                             variant={"outline-light"}
-                            onClick={() => user.setIsAuth(true)}
+                            onClick={() => navigate(LOGIN_ROUTE)}
                         >
                             Авторизация
                         </Button>

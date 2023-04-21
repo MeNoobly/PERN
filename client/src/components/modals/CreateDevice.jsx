@@ -4,6 +4,11 @@ import { Context } from "../..";
 
 const CreateDevice = ({ show, handleClose }) => {
     const { device } = useContext(Context);
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState(0);
+    const [file, setFile] = useState(null);
+    const [brand, setBrand] = useState(null);
+    const [type, setType] = useState(null);
     const [info, setInfo] = useState([]);
 
     const addInfo = () => {
@@ -12,6 +17,10 @@ const CreateDevice = ({ show, handleClose }) => {
 
     const removeInfo = (number) => {
         setInfo(info.filter((item) => item.number !== number));
+    };
+
+    const selectFile = (event) => {
+        setFile(event.target.files[0]);
     };
 
     return (
@@ -42,15 +51,25 @@ const CreateDevice = ({ show, handleClose }) => {
                         </Dropdown.Menu>
                     </Dropdown>
                     <Form.Control
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
                         placeholder="Введите название устрйства"
                         className="mt-3"
                     ></Form.Control>
                     <Form.Control
+                        value={price}
+                        onChange={(event) =>
+                            setPrice(Number(event.target.value))
+                        }
                         placeholder="Введите стоимость устрйства"
                         className="mt-3"
                         type="number"
                     ></Form.Control>
-                    <Form.Control className="mt-3" type="file"></Form.Control>
+                    <Form.Control
+                        className="mt-3"
+                        type="file"
+                        onChange={selectFile}
+                    ></Form.Control>
                     <hr />
                     <Button variant={"outline-dark"} onClick={addInfo}>
                         Добавить новое свойство
