@@ -11,6 +11,9 @@ class deviceController {
             const { img } = request.files;
             const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+            let fileName = v4() + ".jpg";
+            img.mv(path.resolve(__dirname, "..", "static", fileName));
+
             const device = await models.Device.create({
                 name,
                 price,
@@ -29,9 +32,6 @@ class deviceController {
                     });
                 });
             }
-
-            let fileName = v4() + ".jpg";
-            img.mv(path.resolve(__dirname, "..", "static", fileName));
 
             return response.json(device);
         } catch (error) {

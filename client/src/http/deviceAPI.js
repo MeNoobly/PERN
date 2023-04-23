@@ -43,9 +43,17 @@ export const createDevice = async (device) => {
     return data;
 };
 
-export const fetchDevices = async () => {
+export const fetchDevices = async (typeId, brandId, page, limit = 5) => {
     const { data } = await $host.get(
-        `${process.env.REACT_APP_API_URL}/api/device`
+        `${process.env.REACT_APP_API_URL}/api/device`,
+        {
+            params: {
+                typeId,
+                brandId,
+                page,
+                limit,
+            },
+        }
     );
 
     return data;
